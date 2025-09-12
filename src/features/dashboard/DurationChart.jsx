@@ -8,9 +8,9 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
+import { useState, useEffect } from "react";
 
 const ChartBox = styled.div`
-  /* Box */
   background-color: var(--color-grey-0);
   border: 1px solid var(--color-grey-100);
   border-radius: var(--border-radius-md);
@@ -24,50 +24,27 @@ const ChartBox = styled.div`
 
   & .recharts-pie-label-text {
     font-weight: 600;
+    font-size: 1.2rem;
+  }
+
+  @media (max-width: 1024px) {
+    grid-column: 1 / -1;
+  }
+
+  @media (max-width: 768px) {
+    padding: 1.6rem 2rem;
   }
 `;
 
 const startDataLight = [
-  {
-    duration: "1 night",
-    value: 0,
-    color: "#ef4444",
-  },
-  {
-    duration: "2 nights",
-    value: 0,
-    color: "#f97316",
-  },
-  {
-    duration: "3 nights",
-    value: 0,
-    color: "#eab308",
-  },
-  {
-    duration: "4-5 nights",
-    value: 0,
-    color: "#84cc16",
-  },
-  {
-    duration: "6-7 nights",
-    value: 0,
-    color: "#22c55e",
-  },
-  {
-    duration: "8-14 nights",
-    value: 0,
-    color: "#14b8a6",
-  },
-  {
-    duration: "15-21 nights",
-    value: 0,
-    color: "#3b82f6",
-  },
-  {
-    duration: "21+ nights",
-    value: 0,
-    color: "#a855f7",
-  },
+  { duration: "1 night", value: 0, color: "#ef4444" },
+  { duration: "2 nights", value: 0, color: "#f97316" },
+  { duration: "3 nights", value: 0, color: "#eab308" },
+  { duration: "4-5 nights", value: 0, color: "#84cc16" },
+  { duration: "6-7 nights", value: 0, color: "#22c55e" },
+  { duration: "8-14 nights", value: 0, color: "#14b8a6" },
+  { duration: "15-21 nights", value: 0, color: "#3b82f6" },
+  { duration: "21+ nights", value: 0, color: "#a855f7" },
 ];
 
 function prepareData(startData, stays) {
@@ -96,18 +73,28 @@ function prepareData(startData, stays) {
 function DurationChart({ confirmedStays }) {
   const data = prepareData(startDataLight, confirmedStays);
 
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    function handleResize() {
+      setIsMobile(window.innerWidth < 768);
+    }
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <ChartBox>
       <Heading as="h2">Stay duration summary</Heading>
-      <ResponsiveContainer width="100%" height={240}>
+      <ResponsiveContainer width="100%" height={isMobile ? 360 : 280}>
         <PieChart>
           <Pie
             data={data}
             nameKey="duration"
             dataKey="value"
-            innerRadius={85}
-            outerRadius={110}
-            cx="40%"
+            innerRadius={isMobile ? 70 : 85}
+            outerRadius={isMobile ? 95 : 110}
+            cx={isMobile ? "50%" : "40%"}
             cy="50%"
             paddingAngle={3}
           >
@@ -120,14 +107,37 @@ function DurationChart({ confirmedStays }) {
             ))}
           </Pie>
           <Tooltip />
-          <Legend
-            verticalAlign="middle"
-            align="right"
-            width="30%"
-            layout="vertical"
-            iconSize={15}
-            iconType="circle"
-          />
+          {isMobile ? (
+            <Legend
+              verticalAlign="bottom"
+              align="center"
+              layout="horizontal"
+              iconSize={14}
+              iconType="circle"
+              wrapperStyle={{
+                marginTop: "1.5rem",
+                padding: "0 1rem",
+                lineHeight: "1.8rem",
+                fontSize: "1.2rem",
+                fontWeight: 500,
+              }}
+            />
+          ) : (
+            <Legend
+              verticalAlign="middle"
+              align="right"
+              width="30%"
+              layout="vertical"
+              iconSize={16}
+              iconType="circle"
+              wrapperStyle={{
+                paddingLeft: "1rem",
+                lineHeight: "2rem",
+                fontSize: "1.3rem",
+                fontWeight: 500,
+              }}
+            />
+          )}
         </PieChart>
       </ResponsiveContainer>
     </ChartBox>

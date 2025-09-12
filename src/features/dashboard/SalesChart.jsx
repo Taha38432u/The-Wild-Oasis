@@ -11,15 +11,18 @@ import {
   YAxis,
 } from "recharts";
 import { eachDayOfInterval, format, isSameDay, subDays } from "date-fns";
+import { useState, useEffect } from "react";
 
 const StyledSalesChart = styled(DashboardBox)`
   grid-column: 1 / -1;
 
-  /* Hack to change grid line colors */
-
   & .recharts-cartesian-grid-horizontal line,
   & .recharts-cartesian-grid-vertical line {
     stroke: var(--color-grey-300);
+  }
+
+  @media (max-width: 768px) {
+    padding: 1.2rem;
   }
 `;
 
@@ -48,27 +51,57 @@ function SalesChart({ bookings, numDays }) {
     background: "#fff",
   };
 
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    function handleResize() {
+      setIsMobile(window.innerWidth < 768);
+    }
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <StyledSalesChart>
       <Heading as="h2">
         Sales from {format(allDates.at(0), "MMM dd yyyy")} &mdash;{" "}
-        {format(allDates.at(-1), "MMM dd yyyy")}{" "}
+        {format(allDates.at(-1), "MMM dd yyyy")}
       </Heading>
 
-      <ResponsiveContainer height={300} width="100%">
-        <AreaChart data={data}>
+      <ResponsiveContainer height={isMobile ? 220 : 320} width="100%">
+        <AreaChart
+          data={data}
+          margin={{ top: 10, right: 20, left: isMobile ? 0 : 20, bottom: 10 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+
+          {/* X Axis */}
           <XAxis
             dataKey="label"
-            tick={{ fill: colors.text }}
+            tick={{ fill: colors.text, fontSize: isMobile ? 10 : 12 }}
             tickLine={{ stroke: colors.text }}
+            interval="preserveStartEnd" // evenly space out labels
+            minTickGap={isMobile ? 25 : 15} // extra gap on mobile
           />
+
+          {/* Y Axis */}
           <YAxis
             unit="$"
-            tick={{ fill: colors.text }}
+            width={isMobile ? 40 : 60} // slimmer on mobile
+            tick={{ fill: colors.text, fontSize: isMobile ? 10 : 12 }}
             tickLine={{ stroke: colors.text }}
+            allowDecimals={false}
           />
-          <CartesianGrid strokeDasharray="4" />
-          <Tooltip contentStyle={{ backgroundColor: colors.background }} />
+
+          {/* Tooltip */}
+          <Tooltip
+            contentStyle={{
+              backgroundColor: colors.background,
+              fontSize: isMobile ? "0.90rem" : "1.5rem",
+            }}
+          />
+
+          {/* Areas */}
           <Area
             dataKey="totalSales"
             type="monotone"

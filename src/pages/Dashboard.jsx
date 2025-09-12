@@ -6,7 +6,7 @@ import DashboardLayout from "../features/dashboard/DashboardLayout.jsx";
 function Dashboard() {
   return (
     <>
-      <Row type="horizontal">
+      <Row type="vertical">
         <Heading as="h1">Dashboard</Heading>
         <DashboardFilter />
       </Row>

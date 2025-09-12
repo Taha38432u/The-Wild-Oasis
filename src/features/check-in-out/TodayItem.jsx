@@ -19,10 +19,30 @@ const StyledTodayItem = styled.li`
   &:first-child {
     border-top: 1px solid var(--color-grey-100);
   }
+
+  @media (max-width: 600px) {
+    /* Switch to stacked layout */
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 0.8rem;
+    padding: 1.2rem;
+    border: 1px solid var(--color-grey-100);
+    border-radius: var(--border-radius-sm);
+    margin-bottom: 1.2rem;
+
+    /* Each item in its own card-like box */
+    &:first-child {
+      border-top: 1px solid var(--color-grey-100); /* keep consistent */
+    }
+  }
 `;
 
 const Guest = styled.div`
   font-weight: 500;
+
+  @media (max-width: 600px) {
+    grid-column: span 2; /* name spans full width */
+  }
 `;
 
 function TodayItem({ activity }) {

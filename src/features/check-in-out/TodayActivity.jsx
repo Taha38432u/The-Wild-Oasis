@@ -18,18 +18,20 @@ const StyledToday = styled.div`
   gap: 2.4rem;
   grid-column: 1 / span 2;
   padding: 2.4rem 3.2rem 3.2rem;
+
+  @media (max-width: 768px) {
+    padding: 1.6rem 2rem; /* reduce padding */
+  }
 `;
 
 const TodayList = styled.ul`
-  overflow: scroll;
+  max-height: 30rem;
+  overflow-y: auto;
   overflow-x: hidden;
 
-  /* Removing scrollbars for webkit, firefox, and ms, respectively */
-  &::-webkit-scrollbar {
-    width: 0 !important;
+  @media (max-width: 480px) {
+    max-height: 40vh;
   }
-  scrollbar-width: none;
-  -ms-overflow-style: none;
 `;
 
 const NoActivity = styled.p`
@@ -37,6 +39,10 @@ const NoActivity = styled.p`
   font-size: 1.8rem;
   font-weight: 500;
   margin-top: 0.8rem;
+
+  @media (max-width: 480px) {
+    font-size: 1.6rem;
+  }
 `;
 
 function TodayActivity() {

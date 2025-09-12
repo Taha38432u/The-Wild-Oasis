@@ -1,3 +1,4 @@
+// Sidebar.jsx
 import styled from "styled-components";
 import Logo from "./Logo";
 import MainNav from "./MainNav";
@@ -12,11 +13,25 @@ const StyledSidebar = styled.aside`
   display: flex;
   flex-direction: column;
   gap: 3.2rem;
+
+  @media (max-width: 768px) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 24rem;
+    height: 100%;
+    background-color: var(--color-grey-0);
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+    transform: ${(props) =>
+      props.isOpen ? "translateX(0)" : "translateX(-100%)"};
+    transition: transform 0.3s ease-in-out;
+    z-index: 1000;
+  }
 `;
 
-function Sidebar() {
+function Sidebar({ isOpen, onClose }) {
   return (
-    <StyledSidebar>
+    <StyledSidebar isOpen={isOpen}>
       <Logo />
       <MainNav />
       <Uploader />

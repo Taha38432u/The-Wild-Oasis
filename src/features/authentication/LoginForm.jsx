@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useForm } from "react-hook-form";
 import Button from "../../ui/Button";
 import Form from "../../ui/Form";
 import Input from "../../ui/Input";
@@ -7,39 +7,49 @@ import useLogIn from "./useLogIn.js";
 import SpinnerMini from "../../ui/SpinnerMini.jsx";
 
 function LoginForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const { login, isLoading } = useLogIn();
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    if (!email || !password) return;
-    login({ email, password });
+  // initialize react-hook-form
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  function onSubmit(data) {
+    login(data); // { email, password }
   }
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <FormRowVertical label="Email address">
+    <Form onSubmit={handleSubmit(onSubmit)}>
+      <FormRowVertical label="Email address" error={errors?.email?.message}>
         <Input
           type="email"
           id="email"
-          // This makes this form better for password managers
           autoComplete="username"
           disabled={isLoading}
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          {...register("email", {
+            required: "Email is required",
+            pattern: {
+              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+              message: "Please enter a valid email",
+            },
+          })}
         />
       </FormRowVertical>
-      <FormRowVertical label="Password">
+
+      <FormRowVertical label="Password" error={errors?.password?.message}>
         <Input
           type="password"
           id="password"
           autoComplete="current-password"
           disabled={isLoading}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          {...register("password", {
+            required: "Password is required",
+          })}
         />
       </FormRowVertical>
+
       <FormRowVertical>
         <Button disabled={isLoading} size="large">
           {!isLoading ? "Log in" : <SpinnerMini />}

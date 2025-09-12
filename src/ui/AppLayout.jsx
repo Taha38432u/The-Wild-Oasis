@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
@@ -8,6 +9,10 @@ const StyledAppLayout = styled.div`
   grid-template-columns: 26rem 1fr;
   grid-template-rows: auto 1fr;
   height: 100vh;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const Main = styled.main`
@@ -23,14 +28,16 @@ const Container = styled.div`
   flex-direction: column;
   gap: 3.2rem;
 `;
+
 function AppLayout() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   return (
     <StyledAppLayout>
-      <Header />
-      <Sidebar />
+      <Header onToggleSidebar={() => setIsSidebarOpen((s) => !s)} />
+      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       <Main>
         <Container>
-          {" "}
           <Outlet />
         </Container>
       </Main>

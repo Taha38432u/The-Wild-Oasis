@@ -7,31 +7,31 @@ import Pagination from "../../ui/Pagination.jsx";
 
 function BookingTable() {
   const { bookings, isLoading, count } = useBookings();
-  // const length = bookings.length;
+
   if (isLoading) return <Spinner />;
+
   return (
     <Menus>
-      <Table columns="0.6fr 2fr 2.4fr 1.4fr 1fr 3.2rem">
+      <Table>
+        {/* Table header */}
         <Table.Header>
-          <div>Cabin</div>
-          <div>Guest</div>
-          <div>Dates</div>
-          <div>Status</div>
-          <div>Amount</div>
-          <div></div>
+          <th>Cabin</th>
+          <th>Guest</th>
+          <th>Dates</th>
+          <th>Status</th>
+          <th>Amount</th>
+          <th></th>
         </Table.Header>
 
+        {/* Table body */}
         <Table.Body
           data={bookings}
           render={(booking) => (
             <BookingRow key={booking.id} booking={booking} />
           )}
         />
-
-        <Table.Footer>
-          <Pagination count={count} />
-        </Table.Footer>
       </Table>
+      <Pagination count={count} />
     </Menus>
   );
 }

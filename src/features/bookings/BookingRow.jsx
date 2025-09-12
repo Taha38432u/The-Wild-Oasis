@@ -1,11 +1,10 @@
 import styled from "styled-components";
-import { format, isToday } from "date-fns";
+import { format, isToday, differenceInDays } from "date-fns";
 
 import Tag from "../../ui/Tag";
 import Table from "../../ui/Table";
 
 import { formatCurrency } from "../../utils/helpers";
-import { formatDistanceFromNow } from "../../utils/helpers";
 import Menus from "../../ui/Menus.jsx";
 import { useNavigate } from "react-router-dom";
 import { HiEye } from "react-icons/hi";
@@ -16,7 +15,6 @@ import {
 } from "react-icons/hi2";
 import useCheckout from "../check-in-out/useCheckout.jsx";
 import Modal from "../../ui/Modal.jsx";
-import Button from "../../ui/Button.jsx";
 import ConfirmDelete from "../../ui/ConfirmDelete.jsx";
 import useDeleteBooking from "./useDeleteBooking.js";
 
@@ -50,11 +48,9 @@ const Amount = styled.div`
 function BookingRow({
   booking: {
     id: bookingId,
-    created_at,
     startDate,
     endDate,
     numNights,
-    numGuests,
     totalPrice,
     status,
     guests: { fullName: guestName, email },
@@ -71,73 +67,90 @@ function BookingRow({
 
   const navigate = useNavigate();
 
+  // Ensure dates are valid
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  const nights = differenceInDays(end, start) || numNights;
+
   return (
     <Table.Row>
-      <Cabin>{cabinName}</Cabin>
+      <td>
+        <Cabin>{cabinName}</Cabin>
+      </td>
 
-      <Stacked>
-        <span>{guestName}</span>
-        <span>{email}</span>
-      </Stacked>
+      <td>
+        <Stacked>
+          <span>{guestName}</span>
+          <span>{email}</span>
+        </Stacked>
+      </td>
 
-      <Stacked>
-        <span>
-          {isToday(new Date(startDate))
-            ? "Today"
-            : formatDistanceFromNow(startDate)}{" "}
-          &rarr; {numNights} night stay
-        </span>
-        <span>
-          {format(new Date(startDate), "MMM dd yyyy")} &mdash;{" "}
-          {format(new Date(endDate), "MMM dd yyyy")}
-        </span>
-      </Stacked>
+      <td>
+        <Stacked>
+          <span>
+            {isToday(start) ? "Today" : `${format(start, "MMM dd yyyy")}`}{" "}
+            &rarr; {nights} night{nights > 1 ? "s" : ""}
+          </span>
+          <span>
+            {format(start, "MMM dd yyyy")} &mdash; {format(end, "MMM dd yyyy")}
+          </span>
+        </Stacked>
+      </td>
 
-      <Tag type={statusToTagName[status]}>{status.replace("-", " ")}</Tag>
+      <td>
+        <Tag type={statusToTagName[status]}>{status.replace("-", " ")}</Tag>
+      </td>
 
-      <Amount>{formatCurrency(totalPrice)}</Amount>
-      <Modal>
-        <Menus.Menu>
-          <Menus.Toggle id={bookingId} />
-          <Menus.List id={bookingId}>
-            <Menus.Button
-              onClick={() => navigate(`/bookings/${bookingId}`)}
-              icon={<HiEye />}
-            >
-              See Details
-            </Menus.Button>
-            {status === `unconfirmed` && (
+      <td>
+        <Amount>{formatCurrency(totalPrice)}</Amount>
+      </td>
+
+      <td>
+        <Modal>
+          <Menus.Menu>
+            <Menus.Toggle id={bookingId} />
+            <Menus.List id={bookingId}>
               <Menus.Button
-                onClick={() => navigate(`/checkin/${bookingId}`)}
-                icon={<HiArrowDownOnSquare />}
+                onClick={() => navigate(`/bookings/${bookingId}`)}
+                icon={<HiEye />}
               >
-                Check in
+                See Details
               </Menus.Button>
-            )}
 
-            {status === `checked-in` && (
-              <Menus.Button
-                icon={<HiArrowUpOnSquare />}
-                onClick={() => checkOut(bookingId)}
-                disabled={isCheckingOut}
-              >
-                Check out
-              </Menus.Button>
-            )}
+              {status === "unconfirmed" && (
+                <Menus.Button
+                  onClick={() => navigate(`/checkin/${bookingId}`)}
+                  icon={<HiArrowDownOnSquare />}
+                >
+                  Check in
+                </Menus.Button>
+              )}
 
-            <Modal.Open opens="delete">
-              <Menus.Button icon={<HiTrash />}>Delete</Menus.Button>
-            </Modal.Open>
-          </Menus.List>
-          <Modal.Window name="delete">
-            <ConfirmDelete
-              resourceName="booking"
-              disabled={isDeleting}
-              onConfirm={() => deleteBooking(bookingId)}
-            />
-          </Modal.Window>
-        </Menus.Menu>
-      </Modal>
+              {status === "checked-in" && (
+                <Menus.Button
+                  icon={<HiArrowUpOnSquare />}
+                  onClick={() => checkOut(bookingId)}
+                  disabled={isCheckingOut}
+                >
+                  Check out
+                </Menus.Button>
+              )}
+
+              <Modal.Open opens="delete">
+                <Menus.Button icon={<HiTrash />}>Delete</Menus.Button>
+              </Modal.Open>
+            </Menus.List>
+
+            <Modal.Window name="delete">
+              <ConfirmDelete
+                resourceName="booking"
+                disabled={isDeleting}
+                onConfirm={() => deleteBooking(bookingId)}
+              />
+            </Modal.Window>
+          </Menus.Menu>
+        </Modal>
+      </td>
     </Table.Row>
   );
 }

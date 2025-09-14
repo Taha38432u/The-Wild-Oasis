@@ -10,11 +10,12 @@ function LoginForm() {
   const { login, isLoading } = useLogIn();
 
   // initialize react-hook-form
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const { register, handleSubmit, errors } = useForm({
+    defaultValues: {
+      email: "demoperson@gmail.com",
+      password: "12345687",
+    },
+  });
 
   function onSubmit(data) {
     login(data); // { email, password }

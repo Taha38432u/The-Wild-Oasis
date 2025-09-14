@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Logo from "./Logo";
 import MainNav from "./MainNav";
 import Uploader from "../data/Uploader.jsx";
+import { useOutsideClick } from "../hooks/useOutsideClick";
 
 const StyledSidebar = styled.aside`
   background-color: var(--color-grey-0);
@@ -14,7 +15,7 @@ const StyledSidebar = styled.aside`
   flex-direction: column;
   gap: 3.2rem;
 
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     position: fixed;
     top: 0;
     left: 0;
@@ -30,8 +31,10 @@ const StyledSidebar = styled.aside`
 `;
 
 function Sidebar({ isOpen, onClose }) {
+  const ref = useOutsideClick(onClose);
+
   return (
-    <StyledSidebar isOpen={isOpen}>
+    <StyledSidebar ref={ref} isOpen={isOpen}>
       <Logo />
       <MainNav />
       <Uploader />

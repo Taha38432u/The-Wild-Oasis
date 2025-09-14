@@ -1,4 +1,6 @@
+import { useMediaQuery } from "react-responsive"; // 👈 add this
 import FormRow from "../../ui/FormRow";
+import FormRowVertical from "../../ui/FormRowVertical";
 import Input from "../../ui/Input";
 import useSettings from "./useSettings.js";
 import Spinner from "../../ui/Spinner.jsx";
@@ -17,15 +19,20 @@ function UpdateSettingsForm() {
   } = useSettings();
 
   const { isUpdating, updateSetting } = useUpdateSetting();
+  const isMobile = useMediaQuery({ maxWidth: 1024 }); // 👈 detect mobile/tablet
+  const Row = isMobile ? FormRowVertical : FormRow; // 👈 pick component
+
   function handleUpdate(e, field) {
     const { value } = e.target;
     if (!value) return;
     updateSetting({ [field]: value });
   }
+
   if (isLoading) return <Spinner />;
+
   return (
     <Form>
-      <FormRow label="Minimum nights/booking">
+      <Row label="Minimum nights/booking">
         <Input
           type="number"
           id="min-nights"
@@ -33,9 +40,9 @@ function UpdateSettingsForm() {
           disabled={isUpdating}
           onBlur={(e) => handleUpdate(e, "minBookingLength")}
         />
-      </FormRow>
+      </Row>
 
-      <FormRow label="Maximum nights/booking">
+      <Row label="Maximum nights/booking">
         <Input
           type="number"
           id="max-nights"
@@ -43,9 +50,9 @@ function UpdateSettingsForm() {
           disabled={isUpdating}
           onBlur={(e) => handleUpdate(e, "maxBookingLength")}
         />
-      </FormRow>
+      </Row>
 
-      <FormRow label="Maximum guests/booking">
+      <Row label="Maximum guests/booking">
         <Input
           type="number"
           id="max-guests"
@@ -53,9 +60,9 @@ function UpdateSettingsForm() {
           disabled={isUpdating}
           onBlur={(e) => handleUpdate(e, "maxGuestsPerBooking")}
         />
-      </FormRow>
+      </Row>
 
-      <FormRow label="Breakfast price">
+      <Row label="Breakfast price">
         <Input
           type="number"
           id="breakfast-price"
@@ -63,7 +70,7 @@ function UpdateSettingsForm() {
           disabled={isUpdating}
           onBlur={(e) => handleUpdate(e, "breakfastPrice")}
         />
-      </FormRow>
+      </Row>
     </Form>
   );
 }

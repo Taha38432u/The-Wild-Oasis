@@ -13,16 +13,14 @@ import useBooking from "./useBooking.js";
 import Spinner from "../../ui/Spinner.jsx";
 import { HiEye } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
-import Menus from "../../ui/Menus.jsx";
-import { HiArrowUpOnSquare, HiPencil } from "react-icons/hi2";
+import { HiArrowUpOnSquare } from "react-icons/hi2";
 import useCheckout from "../check-in-out/useCheckout.jsx";
 import Modal from "../../ui/Modal.jsx";
 import ConfirmDelete from "../../ui/ConfirmDelete.jsx";
-import { deleteBooking } from "../../services/apiBookings.js";
 import useDeleteBooking from "./useDeleteBooking.js";
 
 const HeadingGroup = styled.div`
-  display: flex;
+  display: block;
   gap: 2.4rem;
   align-items: center;
 `;
@@ -49,7 +47,7 @@ function BookingDetail() {
           <Heading as="h1">Booking #{bookingId}</Heading>
           <Tag type={statusToTagName[status]}>{status.replace("-", " ")}</Tag>
         </HeadingGroup>
-        <ButtonText onClick={moveBack}>&larr; Back</ButtonText>
+        <ButtonText onClick={moveBack}>Back</ButtonText>
       </Row>
 
       <BookingDataBox booking={booking} />
@@ -57,7 +55,7 @@ function BookingDetail() {
       <ButtonGroup>
         {status === `unconfirmed` && (
           <Button
-            onClick={() => navigate(`/bookings/${bookingId}`)}
+            onClick={() => navigate(`/checkin/${bookingId}`)}
             icon={<HiEye />}
           >
             Check in

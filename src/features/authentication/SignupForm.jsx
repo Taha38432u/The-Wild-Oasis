@@ -1,16 +1,19 @@
+import { useMediaQuery } from "react-responsive"; // 👈 from react-responsive
 import Button from "../../ui/Button";
 import Form from "../../ui/Form";
 import FormRow from "../../ui/FormRow";
+import FormRowVertical from "../../ui/FormRowVertical.jsx";
 import Input from "../../ui/Input";
 import { useForm } from "react-hook-form";
 import useSingUp from "./useSignUp.js";
-
-// Email regex: /\S+@\S+\.\S+/
 
 function SignupForm() {
   const { register, formState, getValues, handleSubmit } = useForm();
   const { errors } = formState;
   const { isLoading, signUp } = useSingUp();
+
+  const isMobile = useMediaQuery({ maxWidth: 1024 });
+  const Row = isMobile ? FormRowVertical : FormRow;
 
   function onSubmit({ fullName, email, password }) {
     signUp({ fullName, email, password });
@@ -18,16 +21,16 @@ function SignupForm() {
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
-      <FormRow label="Full name" error={errors?.fullName?.message}>
+      <Row label="Full name" error={errors?.fullName?.message}>
         <Input
           type="text"
           id="fullName"
           disabled={isLoading}
           {...register("fullName", { required: "This field is required" })}
         />
-      </FormRow>
+      </Row>
 
-      <FormRow label="Email address" error={errors?.email?.message}>
+      <Row label="Email address" error={errors?.email?.message}>
         <Input
           type="email"
           id="email"
@@ -40,9 +43,9 @@ function SignupForm() {
             },
           })}
         />
-      </FormRow>
+      </Row>
 
-      <FormRow
+      <Row
         label="Password (min 8 characters)"
         error={errors?.password?.message}
       >
@@ -58,9 +61,9 @@ function SignupForm() {
             },
           })}
         />
-      </FormRow>
+      </Row>
 
-      <FormRow label="Repeat password" error={errors?.passwordConfirm?.message}>
+      <Row label="Repeat password" error={errors?.passwordConfirm?.message}>
         <Input
           type="password"
           disabled={isLoading}
@@ -71,15 +74,14 @@ function SignupForm() {
               value === getValues().password || "Passwords need to match",
           })}
         />
-      </FormRow>
+      </Row>
 
-      <FormRow>
-        {/* type is an HTML attribute! */}
+      <Row>
         <Button variation="secondary" type="reset">
           Cancel
         </Button>
         <Button disabled={isLoading}>Create new user</Button>
-      </FormRow>
+      </Row>
     </Form>
   );
 }

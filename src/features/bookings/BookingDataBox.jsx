@@ -13,54 +13,67 @@ import { Flag } from "../../ui/Flag";
 import { formatDistanceFromNow, formatCurrency } from "../../utils/helpers";
 
 const StyledBookingDataBox = styled.section`
-  /* Box */
   background-color: var(--color-grey-0);
   border: 1px solid var(--color-grey-100);
   border-radius: var(--border-radius-md);
-
   overflow: hidden;
+  font-size: 1.4rem;
 `;
 
 const Header = styled.header`
   background-color: var(--color-brand-500);
   padding: 2rem 4rem;
   color: #e0e7ff;
-  font-size: 1.8rem;
   font-weight: 500;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
+  gap: 1.2rem;
 
   svg {
-    height: 3.2rem;
-    width: 3.2rem;
+    height: 2.4rem;
+    width: 2.4rem;
   }
 
   & div:first-child {
     display: flex;
     align-items: center;
-    gap: 1.6rem;
+    gap: 1rem;
     font-weight: 600;
-    font-size: 1.8rem;
+    font-size: 1.6rem;
+    flex-wrap: wrap;
   }
 
   & span {
     font-family: "Sono";
-    font-size: 2rem;
-    margin-left: 4px;
+    font-size: 1.8rem;
+    margin-left: 0.2rem;
+  }
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1.6rem 2rem;
+    font-size: 1.4rem;
   }
 `;
 
 const Section = styled.section`
-  padding: 3.2rem 4rem 1.2rem;
+  padding: 2.4rem 3.2rem 1.6rem;
+
+  @media (max-width: 600px) {
+    padding: 1.6rem 1.6rem 1rem;
+  }
 `;
 
 const Guest = styled.div`
   display: flex;
-  align-items: center;
-  gap: 1.2rem;
+  flex-wrap: wrap; /* ✅ allow wrapping */
+  gap: 0.8rem 1.2rem;
   margin-bottom: 1.6rem;
   color: var(--color-grey-500);
+  font-size: 1.4rem;
 
   & p:first-of-type {
     font-weight: 500;
@@ -70,9 +83,10 @@ const Guest = styled.div`
 
 const Price = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.6rem 3.2rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.8rem;
+  padding: 1.6rem 2rem;
   border-radius: var(--border-radius-sm);
   margin-top: 2.4rem;
 
@@ -83,25 +97,35 @@ const Price = styled.div`
 
   & p:last-child {
     text-transform: uppercase;
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     font-weight: 600;
   }
 
   svg {
-    height: 2.4rem;
-    width: 2.4rem;
+    height: 2rem;
+    width: 2rem;
     color: currentColor !important;
+  }
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
   }
 `;
 
 const Footer = styled.footer`
-  padding: 1.6rem 4rem;
+  padding: 1.2rem 2rem;
   font-size: 1.2rem;
   color: var(--color-grey-500);
   text-align: right;
+
+  @media (max-width: 600px) {
+    text-align: left;
+    padding: 1rem 1.6rem;
+  }
 `;
 
-// A purely presentational component
 function BookingDataBox({ booking }) {
   const {
     created_at,
@@ -164,9 +188,8 @@ function BookingDataBox({ booking }) {
         </DataItem>
 
         <Price isPaid={isPaid}>
-          <DataItem icon={<HiOutlineCurrencyDollar />} label={`Total price`}>
+          <DataItem icon={<HiOutlineCurrencyDollar />} label="Total price">
             {formatCurrency(totalPrice)}
-
             {hasBreakfast &&
               ` (${formatCurrency(cabinPrice)} cabin + ${formatCurrency(
                 extrasPrice,

@@ -13,13 +13,13 @@ const StyledHeader = styled.header`
   align-items: center;
   justify-content: space-between;
 
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     position: sticky;
     top: 0;
     z-index: 1100;
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 1024px) {
     justify-content: end;
   }
 `;
@@ -36,7 +36,7 @@ const HamburgerButton = styled.button`
   border: none;
   cursor: pointer;
 
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     display: block;
   }
 `;

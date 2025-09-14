@@ -5,7 +5,8 @@ import BookingTableOperations from "../features/bookings/BookingTableOperations.
 import { useMediaQuery } from "react-responsive";
 
 function Bookings() {
-  const isMobile = useMediaQuery({ maxWidth: 1024 }); // adjust width as needed
+  const isMobile = useMediaQuery({ maxWidth: 1024 });
+
   return (
     <>
       <Row type={isMobile ? "vertical" : "horizontal"}>

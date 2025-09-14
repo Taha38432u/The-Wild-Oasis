@@ -3,7 +3,6 @@ import Button from "./Button";
 import Heading from "./Heading";
 
 const StyledConfirmDelete = styled.div`
-  width: 40rem;
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
@@ -11,21 +10,25 @@ const StyledConfirmDelete = styled.div`
   & p {
     color: var(--color-grey-500);
     margin-bottom: 1.2rem;
+    line-height: 1.5;
   }
 
   & div {
     display: flex;
     justify-content: flex-end;
     gap: 1.2rem;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 480px) {
+    & div {
+      flex-direction: column;
+      align-items: stretch; /* buttons take full width */
+    }
   }
 `;
 
-function ConfirmDelete({
-  resourceName,
-  onConfirm,
-  disabled,
-  onCloseModal,
-}) {
+function ConfirmDelete({ resourceName, onConfirm, disabled, onCloseModal }) {
   return (
     <StyledConfirmDelete>
       <Heading as="h3">Delete {resourceName}</Heading>

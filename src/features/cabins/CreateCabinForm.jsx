@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
 import FormRow from "../../ui/FormRow.jsx";
+import FormRowVertical from "../../ui/FormRowVertical";
 import useInsertCabin from "./useInsertCabin.js";
 import useEditCabin from "./useEditCabin.js";
 
@@ -58,7 +59,7 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
       onSubmit={handleSubmit(onSubmit, onError)}
       type={onCloseModal ? `modal` : `regular`}
     >
-      <FormRow label="Cabin name" error={errors?.name?.message}>
+      <FormRowVertical label="Cabin name" error={errors?.name?.message}>
         <Input
           type="text"
           id="name"
@@ -66,9 +67,12 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
             required: "This field is required",
           })}
         />
-      </FormRow>
+      </FormRowVertical>
 
-      <FormRow label="Maximum Capacity" error={errors?.maxCapacity?.message}>
+      <FormRowVertical
+        label="Maximum Capacity"
+        error={errors?.maxCapacity?.message}
+      >
         <Input
           type="number"
           id="maxCapacity"
@@ -80,9 +84,12 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
             },
           })}
         />
-      </FormRow>
+      </FormRowVertical>
 
-      <FormRow label="Regular Price" error={errors?.regularPrice?.message}>
+      <FormRowVertical
+        label="Regular Price"
+        error={errors?.regularPrice?.message}
+      >
         <Input
           type="number"
           id="regularPrice"
@@ -94,9 +101,9 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
             },
           })}
         />
-      </FormRow>
+      </FormRowVertical>
 
-      <FormRow label="Discount">
+      <FormRowVertical label="Discount">
         <Input
           type="number"
           id="discount"
@@ -105,9 +112,9 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
             required: "This field is required",
           })}
         />
-      </FormRow>
+      </FormRowVertical>
 
-      <FormRow
+      <FormRowVertical
         label="Description for website"
         error={errors?.description?.message}
       >
@@ -119,9 +126,9 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
             required: "This field is required",
           })}
         />
-      </FormRow>
+      </FormRowVertical>
 
-      <FormRow label="Cabin Photo">
+      <FormRowVertical label="Cabin Photo">
         <FileInput
           id="image"
           accept="image/*"
@@ -129,9 +136,9 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
             required: isEditSession ? false : "This field is required",
           })}
         />
-      </FormRow>
+      </FormRowVertical>
 
-      <FormRow>
+      <FormRowVertical>
         {/* type is an HTML attribute! */}
         <Button
           variation="secondary"
@@ -145,7 +152,7 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
             ? "Inserting..."
             : `${isEditSession ? `Edit Cabin` : `Insert cabin`}`}
         </Button>
-      </FormRow>
+      </FormRowVertical>
     </Form>
   );
 }

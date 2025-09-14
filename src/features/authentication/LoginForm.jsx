@@ -13,7 +13,7 @@ function LoginForm() {
   const { register, handleSubmit, errors } = useForm({
     defaultValues: {
       email: "demoperson@gmail.com",
-      password: "12345687",
+      password: "12345678",
     },
   });
 
